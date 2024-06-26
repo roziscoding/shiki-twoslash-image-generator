@@ -1,0 +1,41 @@
+{
+  "name": "tmp",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "overrides": {
+    "eslint": "^9.5.0"
+  },
+  "scripts": {
+    "themes": "tsx get-theme-colors.ts",
+    "dev": "npm run themes && vite",
+    "build": "npm run themes && tsc && vite build",
+    "preview": "npm run themes && vite preview"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.5.0",
+    "@shikijs/monaco": "^1.9.1",
+    "@shikijs/twoslash": "^1.9.1",
+    "@types/node": "^20.14.9",
+    "@typescript-eslint/utils": "^7.14.1",
+    "@typescript/twoslash": "^3.2.7",
+    "eslint": "^9.5.0",
+    "globals": "^15.6.0",
+    "tsx": "^4.15.7",
+    "twoslash-cdn": "^0.2.9",
+    "typescript": "^5.2.2",
+    "typescript-eslint": "^7.14.1",
+    "unstorage": "^1.10.2",
+    "vite": "^5.3.1",
+    "vite-plugin-monaco-editor": "^1.1.0"
+  },
+  "dependencies": {
+    "eslint-config-love": "^53.0.0",
+    "html2canvas": "^1.4.1",
+    "monaco-editor": "^0.50.0",
+    "monaco-editor-core": "^0.50.0",
+    "monaco-themes": "^0.4.4",
+    "shiki": "^1.9.1",
+    "tm-themes": "^1.4.3"
+  }
+}
