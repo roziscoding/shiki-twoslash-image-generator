@@ -6,11 +6,14 @@
   "overrides": {
     "eslint": "^9.5.0"
   },
+  "engines": {
+    "node": "20.15.0"
+  },
   "scripts": {
     "themes": "tsx get-theme-colors.ts",
-    "dev": "npm run themes && vite",
-    "build": "npm run themes && tsc && vite build",
-    "preview": "npm run themes && vite preview"
+    "dev": "pnpm run themes && vite",
+    "build": "pnpm run themes && tsc && vite build",
+    "preview": "pnpm run themes && vite preview"
   },
   "devDependencies": {
     "@eslint/js": "^9.5.0",
@@ -21,6 +24,7 @@
     "@typescript/twoslash": "^3.2.7",
     "eslint": "^9.5.0",
     "globals": "^15.6.0",
+    "pnpm": "^9.4.0",
     "tsx": "^4.15.7",
     "twoslash-cdn": "^0.2.9",
     "typescript": "^5.2.2",
