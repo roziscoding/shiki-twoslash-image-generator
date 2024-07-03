@@ -1,7 +1,10 @@
 /* ===== Basic ===== */
 :root {
+  --text-color: #ffffff;
+  --menubar-hight: 40px;
+  --code-padding: 10px;
+  --code-border-size: 1px;
   --theme-background: #23262E;
-  --text-color: white;
   --twoslash-border-color: #8888;
   --twoslash-underline-color: currentColor;
   --twoslash-highlighted-border: #c37d0d50;
@@ -316,13 +319,13 @@
 }
 
 #rendered pre.twoslash {
-  padding: 10px;
+  padding: var(--code-padding);
   margin: 0;
-  border: 1px solid var(--text-color);
+  border: var(--code-border-size) solid var(--text-color);
 }
 
 #menubar {
-  height: 40px;
+  height: var(--menubar-hight);
   background-color: #282a36;
   padding-left: 10px;
   background-color: var(--theme-background);
@@ -393,4 +396,38 @@ body {
 html {
   width: 100vw;
   overflow: hidden;
+}
+
+#canvasContainer {
+  position: fixed;
+  z-index: 10;
+  background-color: var(--theme-background);
+  width: 100vw;
+  height: calc(100vh - var(--menubar-hight) + 2px);
+  bottom: 0;
+  left: 0;
+  display: none;
+}
+
+
+#imageResult {
+  max-width: 90%;
+  max-height: 90%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 11;
+}
+
+#canvasContainer button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 12;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-color);
+  font-size: large;
 }

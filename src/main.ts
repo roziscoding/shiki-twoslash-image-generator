@@ -85,7 +85,7 @@ const initMain = async () => {
         const root = document.querySelector(":root") as HTMLElement;
         root?.style.setProperty("--theme-background", selectedThemeColor);
         const contrastingColor =
-          selectedThemeMeta?.type === "dark" ? "white" : "black";
+          selectedThemeMeta?.type === "dark" ? "#ffffff" : "#000000";
         if (selectedThemeMeta) {
           root?.style.setProperty("--text-color", contrastingColor);
         }
@@ -115,23 +115,37 @@ const initMain = async () => {
           scale: 5,
         }).then((canvas) => {
           const url = canvas.toDataURL("image/png");
-          window.open(url, "_blank");
+          const img = document.getElementById("imageResult")
+          if (img) {
+            img.setAttribute('src', url)
+          }
+          const canvasContainer = document.getElementById("canvasContainer");
+          if (canvasContainer) {
+            canvasContainer.style.display = 'block'
+          }
         });
+    });
+  }
+
+  const closeCanvasButton = document.getElementById("closeCanvas");
+
+  if (closeCanvasButton) {
+    closeCanvasButton.addEventListener("click", () => {
+      const canvasContainer = document.getElementById("canvasContainer");
+      if (canvasContainer) {
+        canvasContainer.style.display = 'none'
+      }
     });
   }
 
   const paddingInput = document.getElementById("padding") as HTMLInputElement;
 
   if (paddingInput) {
-    paddingInput.addEventListener("input", (event) => {
+    paddingInput.addEventListener("change", (event) => {
       const padding = (event.target as HTMLInputElement).value;
       prefStorage.setItem("padding", padding);
-      const code = document.getElementsByClassName(
-        "twoslash"
-      )?.[0] as HTMLElement;
-      if (code) {
-        code.style.padding = `${padding}px`;
-      }
+      const root = document.querySelector(":root") as HTMLElement;
+      root?.style.setProperty("--code-padding", `${padding}px`);
     });
   }
 
@@ -158,16 +172,11 @@ const initMain = async () => {
   ) as HTMLInputElement;
 
   if (borderSizeInput) {
-    borderSizeInput.addEventListener("input", (event) => {
+    borderSizeInput.addEventListener("change", (event) => {
       const borderSize = (event.target as HTMLInputElement).value;
       prefStorage.setItem("borderSize", borderSize);
-      const code = document.getElementsByClassName(
-        "twoslash"
-      )?.[0] as HTMLElement;
-
-      if (code) {
-        code.style.borderWidth = `${borderSize}px`;
-      }
+      const root = document.querySelector(":root") as HTMLElement;
+      root?.style.setProperty("--code-border-size", `${borderSize}px`);
     });
   }
 
@@ -271,19 +280,20 @@ const initMain = async () => {
   const prefPadding = await prefStorage.getItem("padding");
   const prefBorderColor = await prefStorage.getItem("borderColor");
   const prefBorderSize = await prefStorage.getItem("borderSize");
+  const resolveCssVariable = (variable: string) => getComputedStyle(document.body).getPropertyValue(variable).trim();
 
   if (themeSelector && prefTheme) {
     setValueAndTriggerChange(themeSelector, prefTheme);
   }
 
   if (paddingInput) {
-    setValueAndTriggerChange(paddingInput, prefPadding || "0");
+    setValueAndTriggerChange(paddingInput, prefPadding ?? "10");
   }
 
   if (borderColorInput) {
     setValueAndTriggerChange(
       borderColorInput,
-      prefBorderColor || "var(--text-color)"
+      prefBorderColor || resolveCssVariable("--text-color") || "#ffffff"
     );
   }
 
