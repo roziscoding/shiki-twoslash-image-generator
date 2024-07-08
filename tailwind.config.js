@@ -12,4 +12,5 @@ export default {
   },
   plugins: [],
   content: ["./index.html", "./src/**/*.{vue,js,ts,jsx,tsx}"],
+  safelist: ["w-1/2", "w-0", "w-full"],
 };

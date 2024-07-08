@@ -197,7 +197,7 @@ const downloadImage = () => {
     </nav>
     <main class="h-full flex flex-row items-center justify-start">
       <section
-        class="w-1/2 border-r border-r-theme-fg h-full"
+        class="border-r border-r-theme-fg h-full"
         :class="{ 'w-1/2': showEditor, 'w-0': !showEditor }"
       >
         <VueMonacoEditor
@@ -228,7 +228,7 @@ const downloadImage = () => {
       v-show="showCanvas"
       class="fixed w-screen h-screen bg-theme-alternate top-0 left-0 flex items-center justify-center z-50 flex-col"
     >
-      <img class="h-3/4" ref="imgElement" />
+      <img style="max-height: 75%" ref="imgElement" />
       <div class="flex gap-2 mt-2 w-full justify-center">
         <button class="p-2 bg-theme-fg text-theme-bg" @click="downloadImage">
           Download
