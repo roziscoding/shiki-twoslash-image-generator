@@ -11,10 +11,17 @@ import fs from "node:fs/promises";
         );
         const themeObject = JSON.parse(theme);
         const themeName = themeObject.name;
-        const themeBackground = themeObject.colors["editor.background"];
-        return [themeName, themeBackground];
+        const bg = themeObject.colors["editor.background"];
+        const fg =
+          themeObject.colors["editor.foreground"] ??
+          (themeObject.type === "dark" ? "#ffffff" : "#000000");
+        const alternate = themeObject.colors["activityBar.background"] ?? bg;
+        return [themeName, { bg, fg, alternate }];
       })
     )
   );
-  await fs.writeFile("src/theme-colors.json", JSON.stringify(themes, null, 2));
+  await fs.writeFile(
+    "./src/theme-colors.json",
+    JSON.stringify(themes, null, 2)
+  );
 })();

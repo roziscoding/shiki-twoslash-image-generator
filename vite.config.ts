@@ -1,3 +1,4 @@
+import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vite'
 import monacoEditorPluginModule from 'vite-plugin-monaco-editor'
 
@@ -14,6 +15,7 @@ const monacoEditorPlugin = isObjectWithDefaultFunction(monacoEditorPluginModule)
 
 export default defineConfig({
   plugins: [
-    monacoEditorPlugin({})
+    monacoEditorPlugin({}),
+    vue(),
   ]
 })
