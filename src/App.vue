@@ -12,6 +12,7 @@ const { theme, lightThemes, darkThemes } = useThemes();
 // #endregion
 
 // #region Configuring Monaco Editor
+const showEditor = ref(true);
 const DEFAULT_CODE =
   "// Enter code to see it rendered here with shiki + twoslash";
 const code = userPersistedRef("code", DEFAULT_CODE);
@@ -28,8 +29,8 @@ const MONACO_OPTIONS = {
   scrollBeyondLastLine: false,
 } satisfies EditorProps["options"];
 // #endregion
-``;
-// #region Rendering with twoslash
+
+// #region Rendering with Twoslash
 
 const shikiRenderer = inject(shiki);
 const { twoslash, transformerTwoslash } = useTwoslash();
@@ -76,7 +77,7 @@ watch(
 );
 // #endregion
 
-// #region Exporting
+// #region Exporting image
 const padding = userPersistedRef("padding", 10);
 const borderSize = userPersistedRef("borderSize", 1);
 const showCanvas = ref(false);
@@ -95,25 +96,54 @@ const generateImage = () => {
   const twoslashHtml = document.getElementById("twoslash-html");
   if (!twoslashHtml) return;
 
-  html2canvas(twoslashHtml, { allowTaint: true, scale: 3 }).then((canvas) => {
+  html2canvas(twoslashHtml, {
+    allowTaint: true,
+    scale: 3,
+    logging: false,
+    windowHeight: twoslashHtml.scrollHeight,
+    windowWidth: twoslashHtml.scrollWidth,
+    backgroundColor: getComputedStyle(document.body).getPropertyValue(
+      "--theme-bg"
+    ),
+  }).then((canvas) => {
     const image = canvas.toDataURL("image/png");
     canvas.toBlob((blob) => {
       if (!blob) return;
       imageBlob.value = blob;
     }, "image/png");
-    console.log(imgElement.value);
+
     imgElement.value!.src = image;
     showCanvas.value = true;
   });
 };
 
-const copyImage = () => {
-  navigator.clipboard.write([
+const copySuccess = ref(false);
+
+const copyImage = async () => {
+  await navigator.clipboard.write([
     new ClipboardItem({
       "image/png": imageBlob.value!,
     }),
   ]);
+
+  copySuccess.value = true;
+
+  setTimeout(() => {
+    copySuccess.value = false;
+  }, 1000);
 };
+
+const downloadImage = () => {
+  const url = imgElement.value?.src;
+
+  if (!url) return;
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "twoslash.png";
+  a.click();
+};
+// #endregion
 </script>
 <template>
   <div class="h-full bg-theme-bg overflow-hidden">
@@ -133,6 +163,12 @@ const copyImage = () => {
               </option>
             </optgroup>
           </select>
+          <button
+            class="p-2 bg-theme-fg text-theme-bg"
+            @click="showEditor = !showEditor"
+          >
+            {{ showEditor ? "Hide" : "Show" }} Editor
+          </button>
         </div>
         <div class="flex items-center space-x-4">
           <div class="flex items-center space-x-4">
@@ -160,7 +196,10 @@ const copyImage = () => {
       </div>
     </nav>
     <main class="h-full flex flex-row items-center justify-start">
-      <section class="w-1/2 border-r border-r-theme-fg h-full">
+      <section
+        class="w-1/2 border-r border-r-theme-fg h-full"
+        :class="{ 'w-1/2': showEditor, 'w-0': !showEditor }"
+      >
         <VueMonacoEditor
           :theme="theme.name"
           language="typescript"
@@ -171,7 +210,8 @@ const copyImage = () => {
         />
       </section>
       <section
-        class="w-1/2 h-full bg-theme-bg flex items-center justify-center"
+        class="h-full bg-theme-bg flex items-center justify-center"
+        :class="{ 'w-1/2': showEditor, 'w-full': !showEditor }"
       >
         <div
           class="bg-theme-bg"
@@ -190,8 +230,14 @@ const copyImage = () => {
     >
       <img class="h-3/4" ref="imgElement" />
       <div class="flex gap-2 mt-2 w-full justify-center">
-        <button class="p-2 bg-theme-fg text-theme-bg">Download</button>
-        <button class="p-2 bg-theme-fg text-theme-bg" @click="copyImage">
+        <button class="p-2 bg-theme-fg text-theme-bg" @click="downloadImage">
+          Download
+        </button>
+        <button
+          class="p-2 bg-theme-fg text-theme-bg data-[success='true']:bg-green-400 transition-all duration-300 ease-in-out"
+          @click="copyImage"
+          :data-success="copySuccess"
+        >
           Copy
         </button>
         <button class="p-2 bg-theme-fg text-theme-bg" @click="closeCanvas">

@@ -14,7 +14,10 @@ export function useTwoslash() {
   });
 
   const transformerTwoslash = createTransformerFactory(twoslash.runSync)({
-    renderer: rendererRich({ queryRendering: "line" }),
+    renderer: rendererRich({
+      queryRendering: "line",
+      errorRendering: "line",
+    }),
     throws: true,
   });
 

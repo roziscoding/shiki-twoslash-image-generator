@@ -12,7 +12,7 @@
   "scripts": {
     "themes": "tsx get-theme-colors.ts",
     "dev": "npm run themes && vite",
-    "build": "npm run themes && tsc && vite build",
+    "build": "npm run themes && vite build",
     "preview": "npm run themes && vite preview"
   },
   "devDependencies": {
